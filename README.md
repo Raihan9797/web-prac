@@ -18,7 +18,11 @@ npm start
 3. Running initial files
 - make sure to npm install if `MODULE NOT FOUND`
 
+4. Import importthis.sql in root folder onto mySQL schema
+
 ### Issues
 backend npm start didnt run at first
 - tried to npm install: still doesnt show any output
 - test.js file shows that its working though
+
+todo: set up backend servers to take in login information and CRUD with SQL database

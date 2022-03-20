@@ -21,7 +21,7 @@ connection.connect(function(err) {
 
 connection.query('SELECT * FROM category', (err, rows, fields) => {
     if (err) throw err;
-    solution = rows[1].name;
+    solution = rows[0].name;
     console.log('The solution is: ', rows[0].name)
 });
 
