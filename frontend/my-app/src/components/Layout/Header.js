@@ -1,12 +1,13 @@
 import {Fragment} from 'react';
 import mealsImg from '../../assets/meals.jpg';
 import './Header.css'
+import HeaderCartButton from './HeaderCartButton';
 
 function Header(props) {
     return <Fragment>
         <header className='header'>
             <h1>React Meals</h1>
-            <button>Cart</button>
+            <HeaderCartButton/>
         </header>
         <div className='main-image'>
             <img 

@@ -37,3 +37,9 @@ Need to use box-sizing: border-box otherwise cart button wont appear for some re
 }
 
 ```
+
+## 2. Import Header Cart Button Component
+1. Basically styling the button have an icon, text and a number (that changes based on the amount of items selected). 
+2. You can use SVG and create a component using the svg. See `CartIcon.js`. 
+- Go to https://fontawesome.com/ to find your icons
+- copy SVG code and put that in the return of the component
