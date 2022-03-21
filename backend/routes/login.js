@@ -11,14 +11,6 @@ router.post('/', function(req, res, next) {
     let user_name = req.body.username;
     let passw = req.body.password;
 
-    connection.connect(function(err) {
-        if (err) {
-            console.error('error connecting: ' + err.stack);
-            return;
-        }
-        console.log('connected as id ' + connection.threadId);
-    });
-
     connection.query('SELECT username,password FROM customer WHERE username=? AND password=?', [user_name, passw], (err, rows, fields) => {
         if (err) throw err;
         if (rows.length > 0) {
@@ -26,16 +18,14 @@ router.post('/', function(req, res, next) {
             const verify_password = rows[0].password;
             if (verify_username === user_name && verify_password === passw) {
                 const token = auth.encode_jwt(user_name);
-                return res.json({token: token});
+                res.json({token: token});
             } else {
-                return res.json({error: "This should not be here"});
+                res.json({error: "This should not be here"});
             }
         } else {
-            return res.json({error: "User does not exist!"})
+            res.json({error: "User does not exist!"})
         }
     });
-
-    connection.end();
 });
 
 module.exports = router;
