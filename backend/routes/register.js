@@ -22,16 +22,15 @@ router.post('/', function(req, res, next) {
         console.log('connected as id ' + connection.threadId);
     });
 
-    connection.query('SELECT * FROM category', (err, rows, fields) => {
+    connection.query('INSERT INTO customer(username, password) VALUES (?, ?)', [user_name, passw], (err, rows, fields) => {
         if (err) {
-            res.send('')
+            res.send('User already exists!');
+        } else {
+            res.send('user with username: ' + user_name + ' and password: ' + passw + ' has been successfully inserted');
         }
-        solution = rows[1].name;
-        console.log('The solution is: ', rows[0].name)
     });
 
     connection.end();
-    res.send('username: ' + user_name + "\npassword: " + passw);
 });
 
 module.exports = router;
