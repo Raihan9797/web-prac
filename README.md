@@ -26,3 +26,7 @@ backend npm start didnt run at first
 - test.js file shows that its working though
 
 todo: set up backend servers to take in login information and CRUD with SQL database
+
+
+## Front End Design
+Idea is to start from the product page. Then add cart logic and then login part. Start with the look then add the logic to connect to backend
