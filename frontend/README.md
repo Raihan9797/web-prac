@@ -65,3 +65,80 @@ function AvailableMeals(props) {
 
 ```
 - From a dictionary of meals, we render each one using map. 
+
+
+## 4. Adding Card Component and MealItem Component
+1. Since the card component will usually contain data to be stored within it, we have to use `props.children`
+```js
+import classes from './Card.module.css';
+
+function Card(props) {
+    return <div className = {classes.card}>{props.children}</div>
+};
+
+export default Card;
+```
+
+2. Styles: normal css vs module.css
+- module.css provdies scoping to prevent mixed results when you have classes with the same name. However, it is not required. But here's the main diff
+```js
+// import classes from './AvailableMeals.module.css';
+import Card from '../UI/Card';
+import './AvailableMeals.css';
+
+...
+function AvailableMeals(props) {
+    const mealsList = DUMMY_MEALS.map(meal => 
+        <li>{meal.name}</li>
+    );
+        
+    // return <section className={classes.meals}> // module.css version
+    // normal css version below
+    return <section className='meals'> 
+      <Card>
+        <ul>
+            {mealsList}
+        </ul>
+      </Card>
+    </section>
+
+};
+```
+
+3. passing props from parent to child.
+We create a meal item component to display the name, description and price of the meal. This means that from the AvailableMeals.js where we stored our hardcoded data of meals, we have to pass each meal to our mealItem.
+* As shown previously, we separate each meal item using the map()
+* Then its just a matter of passing the prop names.
+* Make sure the name indicated in the parent file matches th names in the children. It can be any name, but they must match.
+```js
+// Available Meals
+import MealItem from './MealItem/MealItem';
+function AvailableMeals(props) {
+    const mealsList = DUMMY_MEALS.map(meal => 
+      <MealItem
+      // meal = {meal}
+        key={meal.id}
+        name={meal.name}
+        description={meal.description}
+        price={meal.price}
+      />
+    );
+```
+
+```js
+function MealItem(props) {
+    const price = `$${props.price.toFixed(2)}`;
+    return (<li>
+        <div className = 'meal'>
+            <h3>{props.name}</h3>
+            <div className='description'>{props.description}</div>
+            <div className='price'>{price}</div>
+        </div>
+
+        <div>
+        </div>
+    </li>)
+};
+```
+
+* we can also just pass the meal as a whole as seen in the commented code. Then in the MealItem(), we access it via `props.meal.name`
