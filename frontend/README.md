@@ -307,3 +307,15 @@ function Modal(props) {
 
 ```
 * finally, we can see that the function is drilled all the way down to the Backdrop component.
+
+
+## 6. Adding Cart Context
+We need to use Context to add items to Cart. This is because we need it in multiple places in the application. On MealItems, we need to update the Cart, on the Cart we need to output the products. Also need to manage it in the future where we can add and remove.
+
+1. Create a `store` folder beside `assets` and `components`. this is the standard name
+2. Create a `cart-context.js` in the store. Can be any name tbh
+3. To manage, we need useState or useReducer. We will create a separate component to manage the context called `CartProvider.js`
+4. CartProvider will wrap components that need access to the Cart ie App.js. So instead of using the Fragment in `App.js` use `<CartProvider>`
+    - Cart needs to render cart items
+    - Header needs to acess the badge in the header
+    - Meals need access since we want to add items to the Cart
