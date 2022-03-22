@@ -142,3 +142,6 @@ function MealItem(props) {
 ```
 
 * we can also just pass the meal as a whole as seen in the commented code. Then in the MealItem(), we access it via `props.meal.name`
+
+## 5. Add MealItemForm and Input component
+1. 
