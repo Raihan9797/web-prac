@@ -196,3 +196,17 @@ function Cart(props) {
     ...
 };
 ```
+
+## 6. Adding Modal Via React Portal
+1. React Portal for both backdrop (thing behind the modal overlay which blocks interaction with the rest of the page) and the modal overaly (to use it wherever you want but render the actual html element in a specific place in the dom tree)
+    1. go to `index.html` file in `public` folder and add an 'overlay'
+    ```html
+    ...
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="overlays"></div>
+    <div id="root"></div>
+    ```
+2. The main idea of the backdrop is that it sets the original page to be black and uninteractable (as we are focusing on the overlay)
+
+3. The modal overlay is basically the popup that you will be rendering.
+4. Both of these will rendered on a new "page" called `overlay` basically to prevent really wonky stuff from happening.

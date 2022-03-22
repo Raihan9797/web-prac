@@ -1,17 +1,20 @@
 import './App.css';
 import Header from './components/Layout/Header';
 import Meals from './components/Meals/Meals';
+import Cart from './components/Cart/Cart';
+import {Fragment} from 'react';
 
 function App() {
   return (
-    <div className="App">
+    <Fragment className="App">
+      <Cart/>
       <Header></Header>
       <main>
         <Meals></Meals>
 
       </main>
 
-    </div>
+    </Fragment>
   );
 }
 
