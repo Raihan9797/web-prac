@@ -14,13 +14,6 @@ const decode_jwt = (token) => {
 const auth_jwt = (req, res, next) => {
     const access_token = req.headers.access_token;
     const {username} = decode_jwt(access_token);
-    connection.connect(function(err) {
-        if (err) {
-            console.error('error connecting: ' + err.stack);
-            return;
-        }
-        console.log('connected as id ' + connection.threadId);
-    });
     connection.query('SELECT username FROM customer WHERE username=?', [username], (err, rows, fields) => {
         if (err) throw err;
         if (rows.length > 0) {
