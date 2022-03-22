@@ -182,3 +182,17 @@ function Input(props) {
 };
 ```
 
+## 5. Create cart component
+This is a precursor to the cart modal component. You can actually put this component in the `Meals.js` to see what it looks like. The idea is for this popup cart to appear when you click on the cart button
+
+1. Recall module.css issues: renaming of certain classnames. Observe how the `cart-items` needs to have a dash. Using regular css, you can just put it in a string format which allows for spaces.
+```js
+function Cart(props) {
+    const cartItems = <ul className = {classes['cart-items']}>
+        {[
+            {id:'c1', name:'Sushi', price:22.99},
+        ].map(cartItem => <li>{cartItem.name}</li>)}
+    </ul>
+    ...
+};
+```
