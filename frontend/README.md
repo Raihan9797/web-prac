@@ -144,4 +144,41 @@ function MealItem(props) {
 * we can also just pass the meal as a whole as seen in the commented code. Then in the MealItem(), we access it via `props.meal.name`
 
 ## 5. Add MealItemForm and Input component
-1. 
+1. Besides the description of each mealitem, we want to be able to increase the qty selected for each one. We will create a separate MealItemForm component to be used in MealItem
+```js
+import Input from '../../UI/Input';
+import classes from './MealItemForm.module.css';
+
+function MealItemForm(props) {
+    return <form className = {classes.form}>
+        <Input 
+         label = "Amount"
+         input = {{
+            id: 'amount_' + props.id,
+            type: 'number',
+            min: 1,
+            max: 5,
+            step: 1,
+            defaultValue: 2
+         }}
+        />
+        <button>+ Add</button>
+    </form>
+
+};
+```
+2. Notice that we have also included an `id` for each input, this will allow each meal item to have their own specific qty input
+
+3. You can see that we have created our own Input component as there is the possibility of reusing this component in other iterations. To make this component flexible, we use props to take in the usual arguments that a regular `input` component should be able to do. This allows us to throw all the input above into this component below.
+- Notice that we use the spread operator `...`. This basically allows us to get all the key val pairs in the dict, even if we don't know the amount of values in the dict!
+```js
+// spread all the props from the parent component into the input
+// eg when you use type = 'number' you can add the other params eg max, min
+function Input(props) {
+    return <div className = {classes.input}>
+        <label htmlFor={props.input.id}>{props.label}</label>
+        <input {...props.input}></input>
+    </div>
+};
+```
+
