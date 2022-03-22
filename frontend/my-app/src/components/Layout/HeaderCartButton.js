@@ -7,7 +7,7 @@ import './HeaderCartButton.css';
 // 3rd for badge of numItems
 
 function HeaderCartButton(props) {
-    return <button className='button'>
+    return <button className='button' onClick={props.onClick}>
 
         <span className='icon'>
             <CartIcon/>

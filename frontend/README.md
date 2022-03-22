@@ -210,3 +210,100 @@ function Cart(props) {
 
 3. The modal overlay is basically the popup that you will be rendering.
 4. Both of these will rendered on a new "page" called `overlay` basically to prevent really wonky stuff from happening.
+
+
+## Managing Cart and Modal State
+1. Managing State of Cart (visible, not visible) so we need to use `useState`. We add that in the `App.js` file, because thats where we are rendering the Cart element!
+```js
+  const [cartIsShown, setCartIsShown] = useState(false);
+
+  function showCartHandler() {
+    setCartIsShown(true);
+  }
+  function hideCartHandler() {
+    setCartIsShown(false);
+  }
+```
+
+2. To make the cart overlay disappear depending on the state, you can use the conditional and quickly.
+```js
+  return (
+    <Fragment className="App">
+      {cartIsShown && <Cart/>}
+      ...
+    </Fragment>
+  );
+}
+```
+
+3. Now we need to create and link function that can show or hide the cart overlay. Recall 2 way binding. Basically on the component that renders the Cart (ie App.js) we have a function that changes the state of the Cart ie a `showCartHandler()` and `hideCartHandler()`. We want its children to be able to access this function eg. When we click the backdrop, it should hide the Cart ie call hideCartHandler(), so we pass them through via props
+- Context can be used here actually. but as they discussed, it makes things to general eg. clicking on the backdrop will also cause multiple other calls to other components that are tied to the context
+```js
+function App() {
+  const [cartIsShown, setCartIsShown] = useState(false);
+
+  function showCartHandler() {
+    console.log('show cart');
+    setCartIsShown(true);
+  }
+  function hideCartHandler() {
+    setCartIsShown(false);
+  }
+
+  return (
+    <Fragment>
+      {cartIsShown && <Cart onHideCart={hideCartHandler}/>}
+      <Header onShowCart={showCartHandler}></Header>
+      <main>
+        <Meals></Meals>
+
+      </main>
+
+    </Fragment>
+  );
+}
+```
+- As you can see, both show and hidecart is in this App.js. We set a name `onHideCart = {hideCartHandler}` that will be passed down to Cart to point to the `hideCartHandler` function.
+```js
+// Cart.js
+function Cart(props) {
+    const cartItems = <ul className = {classes['cart-items']}>
+        {[
+            {id:'c1', name:'Sushi', price:22.99},
+        ].map(cartItem => <li>{cartItem.name}</li>)}
+    </ul>
+
+    return (
+        <Modal onHideModal={props.onHideCart}>
+            {cartItems}
+            <div className = {classes.total}>
+                <span>Total Amount</span>
+                <span>35.62</span>
+            </div>
+            <div className={classes.actions}>
+                <button className={classes['button--alt']} onClick={props.onHideCart}>Close</button>
+                <button className={classes.button}>Order</button>
+            </div>
+        </Modal>
+    )
+};
+```
+* Observe how there are 2 `{props.onHideCart}` in this component. Basically, there are 2 instances that will result in hiding the Cart overlay: clicking on the backdrop or clicking on the `Close` button in the cart overlay!
+
+```js
+function Backdrop(props) {
+    return <div className={classes.backdrop} onClick={props.onClick}></div>
+};
+
+...
+function Modal(props) {
+    return <Fragment>
+        {ReactDOM.createPortal(<Backdrop onClick ={props.onHideModal}/>, portalElement)}
+        {ReactDOM.createPortal(<ModalOverlay>{props.children}</ModalOverlay>,
+         portalElement)}
+    </Fragment>
+
+};
+
+```
+* finally, we can see that the function is drilled all the way down to the Backdrop component.
