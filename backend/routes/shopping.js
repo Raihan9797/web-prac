@@ -16,7 +16,7 @@ router.get('/get_products', async function(req, res, next) {
     //     if (err) throw err;
     //     res.json(rows);
     // });
-    const con = await mysql.createConnection({host:'localhost', user: 'root', password:'paultho', database: 'prac'});
+    const con = await mysql.createConnection({host:'localhost', user: 'root', password:'password', database: 'prac'});
     const [rows, fields] = await con.execute('SELECT * FROM product');
     res.json(rows);
 });
@@ -24,7 +24,7 @@ router.get('/get_products', async function(req, res, next) {
 router.get('/get_cart', auth.auth_jwt, async function(req, res, next)  {
     const access_token = req.headers.access_token;
     const {username} = auth.decode_jwt(access_token);
-    const con = await mysql.createConnection({host:'localhost', user: 'root', password:'paultho', database: 'prac'});
+    const con = await mysql.createConnection({host:'localhost', user: 'root', password:'password', database: 'prac'});
     const [rows, fields] = await con.execute('SELECT id FROM customer WHERE username=?', [username]);
     if (rows.length === 0) {
         return res.status(401).json({error: 'This should not be here'});
@@ -43,7 +43,7 @@ router.post('/add_item', auth.auth_jwt, async function(req, res, next) {
     const access_token = req.headers.access_token;
     const {username} = auth.decode_jwt(access_token);
     const {product_id, product_qty} = req.body;
-    const con = await mysql.createConnection({host:'localhost', user: 'root', password:'paultho', database: 'prac'});
+    const con = await mysql.createConnection({host:'localhost', user: 'root', password:'password', database: 'prac'});
     const [rows, fields] = await con.execute('SELECT id FROM customer WHERE username=?', [username]);
     if (rows.length === 0) {
         return res.status(401).json({error: 'This should not be here'});
@@ -63,7 +63,7 @@ router.post('/remove_item', auth.auth_jwt, async function(req, res, next) {
     const access_token = req.headers.access_token;
     const {username} = auth.decode_jwt(access_token);
     const {product_id} = req.body;
-    const con = await mysql.createConnection({host:'localhost', user: 'root', password:'paultho', database: 'prac'});
+    const con = await mysql.createConnection({host:'localhost', user: 'root', password:'password', database: 'prac'});
     const sql = 'SELECT order_.id FROM customer INNER JOIN order_ ON customer.id = order_.customer_id WHERE order_.status="Pending" AND username=?';
     const [orders, _] = await con.execute(sql, [username]);
     const ord_id = orders[0].id;
@@ -74,7 +74,7 @@ router.post('/remove_item', auth.auth_jwt, async function(req, res, next) {
 router.put('/checkout', auth.auth_jwt, async function(req, res, next) {
     const access_token = req.headers.access_token;
     const {username} = auth.decode_jwt(access_token);
-    const con = await mysql.createConnection({host:'localhost', user: 'root', password:'paultho', database: 'prac'});
+    const con = await mysql.createConnection({host:'localhost', user: 'root', password:'password', database: 'prac'});
     const sql = 'SELECT order_.id FROM customer INNER JOIN order_ ON customer.id = order_.customer_id WHERE order_.status="Pending" AND username=?';
     const [orders, _] = await con.execute(sql, [username]);
     const ord_id = orders[0].id;
