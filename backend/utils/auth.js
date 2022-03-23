@@ -14,6 +14,7 @@ const decode_jwt = (token) => {
 const auth_jwt = (req, res, next) => {
     const access_token = req.headers.access_token;
     const {username} = decode_jwt(access_token);
+    console.log(username);
     connection.query('SELECT username FROM customer WHERE username=?', [username], (err, rows, fields) => {
         if (err) throw err;
         if (rows.length > 0) {
@@ -24,7 +25,7 @@ const auth_jwt = (req, res, next) => {
                 return res.json({error: "This should not be here"});
             }
         } else {
-            return res.json({error: "Unauthorized"})
+            return res.status(401).json({error: "Unauthorized"})
         }
     });
 };
