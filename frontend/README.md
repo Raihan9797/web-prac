@@ -359,3 +359,69 @@ function HeaderCartButton(props) {
     </button>
 };
 ```
+
+
+## 8. Adding Cart Reducer
+To add cart items, we need to go to `CartProvider`. This is where we settle the changes
+1. We can useState, but useReducer is preferred for more complex functions. They are kinda similar, where we can useReducer and it returns a `state` that we will change to refresh the components and `dispactAction` which is basically setting the state.
+- To do this, we need a default value `defaultCartState` and a reducer function to manage the state of the cart
+
+```js
+    // we point at the function and then the default value ie initial state
+    // it returns an array with the state and the dispatch function
+    // now cartState is the state we will be changing and dispatch is the function we will be using to change the state
+    const [cartState, dispatchCartAction] = useReducer(cartReducer, defaultCartState);
+
+```
+2. The reducer function will take in the dispatch function and handler the state of the Cart
+
+```js
+// created outsider cos it doesnt need to be reloaded every time the cart changes
+/*
+action is dispatched from the cart-context.js by you
+we need to return a new state
+*/
+const cartReducer = (state, action) => {
+    if (action.type === 'ADD_ITEM') {
+        const updatedItems = state.items.concat(action.item); // returns a new array ie immutable
+        console.log(updatedItems);
+        const updatedTotalAmount = state.totalAmount + action.item.price * action.item.amount;
+        return {
+            items: updatedItems,
+            totalAmount: updatedTotalAmount
+        };
+    };
+    return defaultCartState;
+};
+
+```
+
+2. Just like useState, we will have Handlers to change the state of the Cart. However this time, we will use the dispatcher to tell the reducer what type of action needs to be done.
+
+3. We also set the context inside the component and basically tell the component what functions we will be using
+
+```js
+    function addItemToCartHandler(item) {
+        /*
+        if item already in the cart, just increment the quantity
+        else add the item to the cart
+        */
+       dispatchCartAction({
+            // type to identify the action
+            type: 'ADD_ITEM',
+            // what im forwarding to the reducer
+            payload: item
+        });
+
+    };
+    function removeItemFromCartHandler(id) {
+
+    };
+    const cartContext = {
+        items: [],
+        totalAmount: 0,
+        addItem: addItemToCartHandler,
+        removeItem: removeItemFromCartHandler
+    }
+
+```
