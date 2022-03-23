@@ -425,3 +425,8 @@ const cartReducer = (state, action) => {
     }
 
 ```
+
+
+## 9. Working with Refs and Forward Refs
+1. Now that we have set up the functions to change the Cart STate, we need to link the functions to the components that will call it. We will 
+Refs are basically states that will NOT re-render the component.

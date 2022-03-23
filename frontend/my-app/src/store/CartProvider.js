@@ -15,9 +15,9 @@ we need to return a new state
 */
 const cartReducer = (state, action) => {
     if (action.type === 'ADD_ITEM') {
-        const updatedItems = state.items.concat(action.item); // returns a new array ie immutable
-        console.log(updatedItems);
-        const updatedTotalAmount = state.totalAmount + action.item.price * action.item.amount;
+        const updatedItems = state.items.concat(action.payload); // returns a new array ie immutable
+        console.log('action', action);
+        const updatedTotalAmount = state.totalAmount + action.payload.price * action.payload.amount;
         return {
             items: updatedItems,
             totalAmount: updatedTotalAmount
@@ -48,11 +48,14 @@ export default function CartProvider(props) {
 
     };
     function removeItemFromCartHandler(id) {
-
+        dispatchCartAction({
+            type: 'REMOVE_ITEM',
+            payload: id
+        });
     };
     const cartContext = {
-        items: [],
-        totalAmount: 0,
+        items: cartState.items,
+        totalAmount: cartState.totalAmount,
         addItem: addItemToCartHandler,
         removeItem: removeItemFromCartHandler
     }
