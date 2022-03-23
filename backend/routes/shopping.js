@@ -59,4 +59,27 @@ router.post('/add_item', auth.auth_jwt, async function(req, res, next) {
     res.status(200).json({response: "Added " + product_id + "x" + product_qty + " to cart"});
 });
 
+router.post('/remove_item', auth.auth_jwt, async function(req, res, next) {
+    const access_token = req.headers.access_token;
+    const {username} = auth.decode_jwt(access_token);
+    const {product_id} = req.body;
+    const con = await mysql.createConnection({host:'localhost', user: 'root', password:'paultho', database: 'prac'});
+    const sql = 'SELECT order_.id FROM customer INNER JOIN order_ ON customer.id = order_.customer_id WHERE order_.status="Pending" AND username=?';
+    const [orders, _] = await con.execute(sql, [username]);
+    const ord_id = orders[0].id;
+    await con.execute("DELETE FROM orderitem WHERE product_id=? AND order_id=?", [product_id, ord_id]);
+    res.status(200).json({response: "Removed " + product_id + " form cart"});
+});
+
+router.put('/checkout', auth.auth_jwt, async function(req, res, next) {
+    const access_token = req.headers.access_token;
+    const {username} = auth.decode_jwt(access_token);
+    const con = await mysql.createConnection({host:'localhost', user: 'root', password:'paultho', database: 'prac'});
+    const sql = 'SELECT order_.id FROM customer INNER JOIN order_ ON customer.id = order_.customer_id WHERE order_.status="Pending" AND username=?';
+    const [orders, _] = await con.execute(sql, [username]);
+    const ord_id = orders[0].id;
+    await con.execute("UPDATE order_ SET status='Success' WHERE id=?", [ord_id]);
+    res.status(200).json({response: "Checked out cart for " + username});
+});
+
 module.exports = router;
