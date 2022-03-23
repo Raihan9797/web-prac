@@ -430,3 +430,71 @@ const cartReducer = (state, action) => {
 ## 9. Working with Refs and Forward Refs
 1. Now that we have set up the functions to change the Cart STate, we need to link the functions to the components that will call it. We will 
 Refs are basically states that will NOT re-render the component.
+
+## 10. Outputtng Cart Items
+We want to display the items that we have added in the cart on the Cart Popup.
+1. Use the CartContext in the Cart.js
+
+2. Replace the outputs with the CartContext items
+- Recall the for a list item, make sure that it has a key when we are doing the mapping
+- When cart has items, then show the 'Order' Button. Use a value to check the length of the cart context items. Will need to use state in the future when we remove items!
+- For the functions to add or remove in the cart overlay, use bind to only link the specific elements that you need. Preconfigures for future execution.
+```js
+function Cart(props) {
+    const cartCtx = useContext(CartContext);
+
+    const hasItems = cartCtx.items.length > 0;
+    const totalCartAmount = `$${cartCtx.totalAmount.toFixed(2)}`;
+
+    function cartItemRemoveHandler(id) {
+        console.log('removing')
+
+    };
+
+    function cartItemAddHandler(item) {
+        console.log('adding')
+
+    }
+    const cartItems = <ul className = {classes['cart-items']}>
+        {cartCtx.items.map(cartItem => 
+        <CartItem 
+         key={cartItem.id} 
+         cartItemVal = {cartItem}
+         onRemove = {cartItemRemoveHandler.bind(null, cartItem.id)}
+         onAdd = {cartItemAddHandler.bind(null, cartItem)}
+        >
+    
+        </CartItem>
+        )}
+    </ul>
+
+    return (
+        <Modal onHideModal={props.onHideCart}>
+            {cartItems}
+            <div className = {classes.total}>
+                <span>Total Amount</span>
+                <span>{totalCartAmount}</span>
+            </div>
+            <div className={classes.actions}>
+                <button className={classes['button--alt']} onClick={props.onHideCart}>Close</button>
+                {hasItems && <button className={classes.button}>Order</button>}
+            </div>
+        </Modal>
+    )
+};
+
+```
+
+3. Create a CartItem to display each item
+
+4. To prevent too many items from not being seen. Make the cart scrollable:
+```css
+.cart-items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 20rem;
+  overflow: auto;
+}
+
+```
