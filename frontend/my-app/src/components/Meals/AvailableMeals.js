@@ -2,6 +2,7 @@ import classes from './AvailableMeals.module.css';
 import Card from '../UI/Card';
 // import './AvailableMeals.css';
 import MealItem from './MealItem/MealItem';
+// import { useState } from 'react';
 
 
 const DUMMY_MEALS = [
@@ -32,22 +33,47 @@ const DUMMY_MEALS = [
 ];
 
 function AvailableMeals(props) {
-    const mealsList = DUMMY_MEALS.map(meal => 
-      <MealItem
-        id={meal.id}
-        key={meal.id}
-        name={meal.name}
-        description={meal.description}
-        price={meal.price}
-      />
-    );
-        
-    // return <section className='meals'>
-    return <section className={classes.meals}>
-      <Card>
-        <ul>{mealsList}</ul>
-      </Card>
-    </section>
+  /*
+  const [products, setProducts] = useState(DUMMY_MEALS);
+  async function fetchProducts() {
+    const response = await fetch('http://localhost:8080/shopping/get_products');
+    // console.log(response.status);
+    const data = await response.json();
+
+    const transformedProducts = data.map(product => {
+      return {
+        name: product.title,
+        price: product.price,
+        description: product.description,
+        category_id: product.category_id,
+        image: product.image,
+        qty: product.qty,
+      };
+    });
+    // console.log(transformedProducts);
+    setProducts(transformedProducts);
+  };
+
+  console.log('FETCHINGJJKJ');
+  */
+
+  const mealsList = DUMMY_MEALS.map(meal =>
+    <MealItem
+      id={meal.id}
+      key={meal.id}
+      name={meal.name}
+      description={meal.description}
+      price={meal.price}
+    />
+  );
+
+  // return <section className='meals'>
+  return <section className={classes.meals}>
+    <Card>
+      <ul>{mealsList}</ul>
+    </Card>
+  </section>
+
 
 };
 
