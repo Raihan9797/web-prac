@@ -619,3 +619,114 @@ we want to make sure that duplicate items are grouped together.
     }
   };
 ```
+
+## Managing Auth State with context
+1. Setup `auth-context.js` in `store` folder
+- Set what the context should have and its functions to change the context
+```js
+import React, {useState} from 'react'
+
+const AuthContext = React.createContext({
+    token: '',
+    isLoggedIn: false,
+    login: (token) => {},
+    logout: () => {}
+});
+
+```
+
+- Create a Provider component in the same file that is basically a wrapper to handle the context
+- export the context and provider
+```js
+// named export
+export const AuthContextProvider = (props) => {
+    const [token, setToken] = useState(null);
+    const userIsLoggedIn = !!token; // !! converts to boolean. if empty string, false. if anything else, true.
+
+    function loginHandler(token) {
+        setToken(token);
+    };
+
+    function logoutHandler() {
+        setToken(null);
+    };
+
+    const contextValue = {
+        token: token,
+        isLoggedIn: userIsLoggedIn,
+        login: loginHandler,
+        logout: logoutHandler
+    };
+
+    
+    return (<AuthContext.Provider value={contextValue}>{props.children}</AuthContext.Provider>);
+};
+
+export default AuthContext;
+
+```
+
+2. Set the location of the ContextProvider
+- Firstly, find where the contextprovider should be in. Since we need to check the authentication for the entire application, wrap the provider at `index.js`
+```js
+...
+import { BrowserRouter } from 'react-router-dom';
+import { AuthContextProvider } from './store/auth-context';
+
+ReactDOM.render(
+  <AuthContextProvider>
+    <React.StrictMode>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </React.StrictMode>
+  </AuthContextProvider>,
+  document.getElementById('root')
+);
+
+```
+
+3. Go to files which change or need the context
+- eg. AuthForm.js is where we set the authContext, once a user is logged in we need to store the token and tell other sites that this user is logged in
+
+```js
+import { useState, useContext} from 'react';
+import AuthContext from '../../store/auth-context';
+...
+
+const AuthForm = () => {
+  const authCtx = useContext(AuthContext);
+  ...
+
+  async function submitHandler(event) {
+    event.preventDefault();
+
+    // optional: check email and password
+
+    console.log(enteredEmail, enteredPassword);
+
+    if (isLogin) {
+        // post response to db and get the data
+      const response = await fetch('http://localhost:8080/login',
+      const data = await response.json();
+      window.localStorage.setItem('token', data.token);
+      const newtoken = window.localStorage.getItem('token');
+      console.log('token stored', newtoken);
+
+      // STORE THE TOKEN; CHANGE THE AUTHCONTEXT! ///////////////////////////////////
+      authCtx.login(data.token);
+
+    } else { // register user
+    ...
+    }
+    ...
+
+  };
+
+};
+
+```
+
+
+4. Now that we have set the user to isLoggedIn, we need to spread this message around.
+- eg. Only when a user is logged in should he be able to see his profile. He should also not be asked to login again. So we go to the main navigation and render the links conditionally based on the isLoggedIn context

@@ -1,8 +1,10 @@
-import { useState } from 'react';
+import { useState, useContext} from 'react';
+import AuthContext from '../../store/auth-context';
 
 import classes from './AuthForm.module.css';
 
 const AuthForm = () => {
+  const authCtx = useContext(AuthContext);
   const [enteredEmail, setEnteredEmail] = useState('');
   const [enteredPassword, setEnteredPassword] = useState('');
 
@@ -48,7 +50,10 @@ const AuthForm = () => {
       const newtoken = window.localStorage.getItem('token');
       console.log('token stored', newtoken);
 
-    } else {
+      // change auth state
+      authCtx.login(data.token);
+
+    } else { // register user
       const response = await fetch('http://localhost:8080/register',
       {
         method: 'POST',
