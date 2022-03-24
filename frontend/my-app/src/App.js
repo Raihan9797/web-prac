@@ -1,31 +1,24 @@
-import './App.css';
-import Header from './components/Layout/Header';
-import Meals from './components/Meals/Meals';
-import Cart from './components/Cart/Cart';
-import {useState} from 'react';
-import CartProvider from './store/CartProvider';
+import { Switch, Route } from 'react-router-dom';
+import Layout from './components/Layout/Layout';
+import UserProfile from './components/Profile/UserProfile';
+import AuthPage from './pages/AuthPage';
+import HomePage from './pages/HomePage';
 
 function App() {
-  const [cartIsShown, setCartIsShown] = useState(false);
-
-  function showCartHandler() {
-    console.log('show cart');
-    setCartIsShown(true);
-  }
-  function hideCartHandler() {
-    setCartIsShown(false);
-  }
-
   return (
-    <CartProvider>
-      {cartIsShown && <Cart onHideCart={hideCartHandler}/>}
-      <Header onShowCart={showCartHandler}></Header>
-      <main>
-        <Meals></Meals>
-
-      </main>
-
-    </CartProvider>
+    <Layout>
+      <Switch>
+        <Route path='/' exact>
+          <HomePage />
+        </Route>
+        <Route path='/auth'>
+          <AuthPage />
+        </Route>
+        <Route path='/profile'>
+          <UserProfile />
+        </Route>
+      </Switch>
+    </Layout>
   );
 }
 
