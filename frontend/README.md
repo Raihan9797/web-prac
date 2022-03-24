@@ -502,3 +502,120 @@ function Cart(props) {
 
 ## 11. More complex cart logic
 we want to make sure that duplicate items are grouped together.
+
+
+## 12. Making it multi page using React Router
+1. import router
+2. change index.js to include the browser router
+3. app.js can use router to go to different pages. Each page is a separate js file
+4. to go to different pages, we will need to use Nav Link to prevent refreshing everytime we go to a different page instead of LInk
+
+## 13. Authenticating
+1. start with initial files
+2. Work on Auth form first. useState or useRef. When you submit, need to post the values to the backend.
+```js
+  const [enteredEmail, setEnteredEmail] = useState('');
+  const [enteredPassword, setEnteredPassword] = useState('');
+
+  function emailChangeHandler(event) {
+    console.log(event.target.value);
+    setEnteredEmail(event.target.value);
+  }
+
+  function passwordChangeHandler(event) {
+    setEnteredPassword(event.target.value);
+  }
+
+  async function submitHandler(event) {
+    event.preventDefault();
+    ...
+  };
+
+  return (
+    <section className={classes.auth}>
+      <h1>{isLogin ? 'Login' : 'Sign Up'}</h1>
+      <form onSubmit={submitHandler}>
+        <div className={classes.control}>
+          <label htmlFor='email'>Your Email</label>
+          <input type='email' id='email' required value={enteredEmail} onChange={emailChangeHandler}/>
+        </div>
+        <div className={classes.control}>
+          <label htmlFor='password'>Your Password</label>
+          <input type='password' id='password' required value={enteredPassword} onChange={passwordChangeHandler}/>
+        </div>
+        <div className={classes.actions}>
+          <button>{isLogin ? 'Login' : 'Create Account'}</button>
+          <button
+            type='button'
+            className={classes.toggle}
+            onClick={switchAuthModeHandler}
+          >
+            {isLogin ? 'Create new account' : 'Login with existing account'}
+          </button>
+        </div>
+      </form>
+    </section>
+  );
+};
+```
+
+
+- In the submit Event, this is where you post and use async to get the responses
+```js
+  async function submitHandler(event) {
+    event.preventDefault();
+
+    // optional: check email and password
+
+    console.log(enteredEmail, enteredPassword);
+
+    if (isLogin) {
+      const response = await fetch('http://localhost:8080/login',
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          username: enteredEmail,
+          password: enteredPassword
+        }),
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        }
+      });
+
+      const data = await response.json();
+      console.log(data);
+      window.localStorage.setItem('token', data.token);
+      const newtoken = window.localStorage.getItem('token');
+      console.log('token stored', newtoken);
+
+    } else {
+      const response = await fetch('http://localhost:8080/register',
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          username: enteredEmail,
+          password: enteredPassword
+        }),
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        }
+      });
+      // console.log('dfadfads', response.body.getReader());
+
+      if (response.ok) {
+        //const data = await response.body.getReader().read()
+        // get the readable stream and convert it to string
+        const data = await response.body.getReader().read().then(function(result) {
+          return new TextDecoder("utf-8").decode(result.value);
+        });
+        // console.log('registed user response: ', data);
+        alert(data);
+      } else {
+        // console.log('something went wrong');
+        alert('Authentication Failed');
+      }
+    }
+  };
+```
