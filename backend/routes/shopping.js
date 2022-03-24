@@ -39,6 +39,7 @@ router.get('/get_cart', auth.auth_jwt, async function(req, res, next)  {
     res.json(cart);
 });
 
+// expecting product_id and product_qty
 router.post('/add_item', auth.auth_jwt, async function(req, res, next) {
     const access_token = req.headers.access_token;
     const {username} = auth.decode_jwt(access_token);
@@ -59,6 +60,7 @@ router.post('/add_item', auth.auth_jwt, async function(req, res, next) {
     res.status(200).json({response: "Added " + product_id + "x" + product_qty + " to cart"});
 });
 
+// Expecting product_id
 router.post('/remove_item', auth.auth_jwt, async function(req, res, next) {
     const access_token = req.headers.access_token;
     const {username} = auth.decode_jwt(access_token);
