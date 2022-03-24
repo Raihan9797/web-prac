@@ -498,3 +498,7 @@ function Cart(props) {
 }
 
 ```
+
+
+## 11. More complex cart logic
+we want to make sure that duplicate items are grouped together.

@@ -15,9 +15,19 @@ we need to return a new state
 */
 const cartReducer = (state, action) => {
     if (action.type === 'ADD_ITEM') {
-        const updatedItems = state.items.concat(action.payload); // returns a new array ie immutable
-        console.log('action', action);
-        const updatedTotalAmount = state.totalAmount + action.payload.price * action.payload.amount;
+        // checking amount of items in the cart
+        const updatedTotalAmount = state.totalAmount + action.item.price * action.item.amount;
+        console.log('state items', state.items);
+
+        // checking if the item is already in the cart
+        if (action.item in state.items) {
+            // if it is, we need to update the amount}
+            console.log('item already in cart', state.items);
+        }
+
+
+        const updatedItems = state.items.concat(action.item); // returns a new array ie immutable
+        // console.log('action', action);
         return {
             items: updatedItems,
             totalAmount: updatedTotalAmount
@@ -43,14 +53,14 @@ export default function CartProvider(props) {
             // type to identify the action
             type: 'ADD_ITEM',
             // what im forwarding to the reducer
-            payload: item
+            item: item
         });
 
     };
     function removeItemFromCartHandler(id) {
         dispatchCartAction({
             type: 'REMOVE_ITEM',
-            payload: id
+            item: id
         });
     };
     const cartContext = {
